@@ -13,7 +13,7 @@ int selectOption() {
     int option = 0;
     printf("1) load an input\n2) merge holes\n"
            "3) compact memory\n4) print memory view\n"
-           "5) Exit the program");
+           "5) Exit the program\n");
     scanf("%d", &option);
     fflush(stdin);
     return option;
@@ -34,7 +34,7 @@ void readInput(FILE* fp, Node* head) {
         newNode->limit = atoi(token);
         newNode -> next = 0;
 
-        if(head == NULL) {
+        if(head->limit == NULL) {
             head = newNode;
             temp = newNode;
         } else {
@@ -44,11 +44,32 @@ void readInput(FILE* fp, Node* head) {
     }
 }
 
+FILE* readFile() {
+    printf("Enter the file name: ");
+    char* fileName = malloc(sizeof(20));
+    scanf("%s", fileName);
+    FILE *fptr = fopen(fileName, "r");
+    return fptr;
+}
+
 void runProgram(int option) {
+    int readStatus = 0;
+    FILE *fptr;
+    Node *head = malloc(sizeof(Node));
     while(1) {
         switch(option) {
             case 1:
-                printf("load an input");
+                if (readStatus == 0 ) {
+                    fptr = readFile();
+                    if (fptr == NULL) {
+                        printf("File not entered.\n");
+                        continue;
+                    }
+                    readInput(fptr, head);
+                    readStatus = 1;
+                } else {
+                    printf("File already loaded.");
+                }
                 break;
             case 2:
                 printf("merge holes");
