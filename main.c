@@ -44,12 +44,8 @@ void readInput(FILE* fp, Node* head) {
     }
 }
 
-int main(int argc, char **argv) {
-
-    int option = selectOption();
-    Node* head = malloc(sizeof(Node));
-
-    while (1) {
+void runProgram(int option) {
+    while(1) {
         switch(option) {
             case 1:
                 printf("load an input");
@@ -71,13 +67,15 @@ int main(int argc, char **argv) {
         }
         printf("\n");
         option = selectOption();
-
     }
 
+}
 
+int main(int argc, char **argv) {
 
-
-
-
+    int option = selectOption();
+    Node* head = malloc(sizeof(Node));
+    runProgram(option);
     return 0;
+
 }
