@@ -19,7 +19,7 @@ int selectOption() {
     return option;
 }
 
-void readInput(FILE* fp, Node* head) {
+Node* readInput(FILE* fp, Node* head) {
     Node* temp = malloc(sizeof(char) * 20);
     char* str = malloc(sizeof(char) * 20);
     while(fgets(str, 20, fp) != NULL && !isspace(*str)) {
@@ -42,6 +42,7 @@ void readInput(FILE* fp, Node* head) {
             temp = newNode;
         }
     }
+    return head;
 }
 
 FILE* readFile() {
@@ -56,6 +57,8 @@ void runProgram(int option) {
     int readStatus = 0;
     FILE *fptr;
     Node *head = malloc(sizeof(Node));
+//    Node *temp;
+    int num = 1;
     while(1) {
         switch(option) {
             case 1:
@@ -65,7 +68,12 @@ void runProgram(int option) {
                         printf("File not entered.\n");
                         continue;
                     }
-                    readInput(fptr, head);
+                    head = readInput(fptr, head);
+//                    temp = head;
+//                    while (temp != NULL) {
+//                        printf("Node %d: %s, Index: %d, Size: %d\n", num, temp->name, temp->base, temp->limit);
+//                        temp = temp->next;
+//                    }
                     readStatus = 1;
                 } else {
                     printf("File already loaded.");
