@@ -1,6 +1,10 @@
 #include "file_handler.h"
 #include "sort.h"
 
+/**
+ * Prints menu options and accepts value as an int.
+ * @return option as an int
+ */
 int selectOption() {
     int option = 0;
     printf("1) load an input\n2) merge holes\n"
@@ -12,7 +16,7 @@ int selectOption() {
 }
 
 /**
- * Read Input
+ * Read Input file and generates memory linked list.
  * @param fp
  * @param head
  * @return
@@ -78,6 +82,10 @@ Node* readInput(FILE* fp, Node* head) {
     return head;
 }
 
+/**
+ * Reads input file and returns the file pointer.
+ * @return fptr as FILE*
+ */
 FILE* readFile() {
     printf("Enter the file name: ");
     char* fileName = malloc(sizeof(20));
@@ -86,6 +94,10 @@ FILE* readFile() {
     return fptr;
 }
 
+/**
+ * Prints current memory view.
+ * @param node
+ */
 void printMemory (Node* node) {
     int number = 1;
     while (node != NULL) {
@@ -95,6 +107,11 @@ void printMemory (Node* node) {
     }
 }
 
+/**
+ * Merges consecutive memory holes in the memory linked list.
+ * @param head
+ * @return head of the linked list
+ */
 Node* mergeHoles(Node* head) {
     Node* temp = head;
     Node* last = NULL;
@@ -126,6 +143,12 @@ Node* mergeHoles(Node* head) {
     return head;
 }
 
+/**
+ * Compacts the memory linked list by connecting all Px data values
+ * and pushes the holes to the bottom.
+ * @param head
+ * @return
+ */
 Node* compaction(Node* head) {
     Node* temp = head;
     Node* last;

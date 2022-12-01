@@ -2,7 +2,8 @@
 #include "sort.h"
 
 /**
- * Merge Sort
+ * Splits the memory nodes of a list to front and back halves,
+ * then returns the two lists using front and back references.
  * @param source
  * @param frontRef
  * @param backRef
@@ -31,8 +32,8 @@ void FrontBackSplit(struct Node *source,
 }
 
 /**
- * Compares and sorts two void nodes based on their data types.
- * (a-z for chars, largest to smallest for numerical values)
+ * Compares and sorts two memory nodes based on their data types.
+ * (Lowest base sorted first)
  */
 struct Node *SortedMerge(struct Node *a, struct Node *b) {
     struct Node *head = malloc(sizeof(Node *));
@@ -65,7 +66,7 @@ struct Node *SortedMerge(struct Node *a, struct Node *b) {
 //    }
 //}
 /**
- * Sorts the void node linked list based on their data types.
+ * Sorts the memory node linked list based on the base values.
  */
 void nodeSort(struct Node **headRef) {
     struct Node *head = *headRef;
