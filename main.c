@@ -53,6 +53,70 @@ FILE* readFile() {
     return fptr;
 }
 
+void printMemory (Node* node) {
+    int number = 1;
+    while (node != NULL) {
+        printf("Node %d: %s, base = %d, limit = %d\n", number, node->name, node->base, node->limit);
+        node = node -> next;
+        number++;
+    }
+}
+
+/*
+ * if(H)
+ *  ptr1 = H;
+ *  Holecount++;
+ *
+ *
+ *  while(temp->next == H)
+ *     ptr2 = H;
+ *     limitsum += ptr2 -> limit
+ *
+ *
+ */
+
+Node* mergeHoles(Node* head) {
+    Node* temp = head;
+    Node* last;
+    Node* newHole;
+    int newLimit = 0;
+    while (temp != NULL) {
+        if (temp->name[0] == 'H') {
+            newHole = temp;
+            while (temp->name[0] == "H") {
+                newLimit += temp->limit;
+                temp = temp->next;
+            }
+            newHole->limit = newLimit;
+            newLimit = 0;
+            last->next = newHole;
+            newHole->next = temp;
+        }
+        last = temp;
+        temp = temp->next;
+    }
+}
+
+/*
+ * Compaction sort
+ *
+ * lets assume mergeHole is completed.
+ * Therefore - P1 H P17 H
+ *
+ * make a new linkedlist and only insert if is not H
+ *
+ * two option - a pointer to all individual holes
+ * or a hole struct that contains all hole data
+ *
+ *
+ *
+ *
+ */
+
+
+
+
+
 void runProgram(int option) {
     int readStatus = 0;
     FILE *fptr;
@@ -69,6 +133,7 @@ void runProgram(int option) {
                         continue;
                     }
                     head = readInput(fptr, head);
+                    nodeSort(&head);
                     temp = head;
                     while (temp != NULL) {
                         printf("Node %d: %s, Index: %d, Size: %d\n", num, temp->name, temp->base, temp->limit);
@@ -81,6 +146,13 @@ void runProgram(int option) {
                 break;
             case 2:
                 printf("merge holes");
+                head = mergeHoles(head);
+//                temp = head;
+//                while (temp != NULL) {
+//                    printf("Node %d: %s, Index: %d, Size: %d\n", num, temp->name, temp->base, temp->limit);
+//                    temp = temp->next;
+//                    num++;
+//                }
                 break;
             case 3:
                 printf("compact memory");
