@@ -62,28 +62,17 @@ void printMemory (Node* node) {
     }
 }
 
-/*
- * if(H)
- *  ptr1 = H;
- *  Holecount++;
- *
- *
- *  while(temp->next == H)
- *     ptr2 = H;
- *     limitsum += ptr2 -> limit
- *
- *
- */
-
 Node* mergeHoles(Node* head) {
     Node* temp = head;
     Node* last;
     Node* newHole;
     int newLimit = 0;
     while (temp != NULL) {
+
         if (temp->name[0] == 'H') {
             newHole = temp;
-            while (temp->name[0] == 'H') {
+
+            while (temp != NULL && temp->name[0] == 'H') {
                 newLimit += temp->limit;
                 temp = temp->next;
             }
@@ -92,9 +81,12 @@ Node* mergeHoles(Node* head) {
             last->next = newHole;
             newHole->next = temp;
         }
-        last = temp;
-        temp = temp->next;
+        if (temp != NULL) {
+            last = temp;
+            temp = temp->next;
+        }
     }
+    return head;
 }
 
 /*
@@ -115,8 +107,6 @@ Node* mergeHoles(Node* head) {
 
 
 
-
-
 void runProgram(int option) {
     int readStatus = 0;
     FILE *fptr;
@@ -133,29 +123,20 @@ void runProgram(int option) {
                         continue;
                     }
                     head = readInput(fptr, head);
+//                    checkData(head);
                     nodeSort(&head);
-                    temp = head;
-                    while (temp != NULL) {
-                        printf("Node %d: %s, Index: %d, Size: %d\n", num, temp->name, temp->base, temp->limit);
-                        temp = temp->next;
-                    }
                     readStatus = 1;
                 } else {
                     printf("File already loaded.");
                 }
                 break;
             case 2:
-                printf("merge holes");
+                printf("merge holes\n");
                 head = mergeHoles(head);
-//                temp = head;
-//                while (temp != NULL) {
-//                    printf("Node %d: %s, Index: %d, Size: %d\n", num, temp->name, temp->base, temp->limit);
-//                    temp = temp->next;
-//                    num++;
-//                }
                 break;
             case 3:
-                printf("compact memory");
+                printf("compact memory\n");
+                head = compaction(head);
                 break;
             case 4:
                 printf("print memory view");
