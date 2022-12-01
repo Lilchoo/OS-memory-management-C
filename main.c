@@ -21,16 +21,38 @@ int selectOption() {
 
 Node* readInput(FILE* fp, Node* head) {
     Node* temp;
+    int nodeNum = 1;
     char* str = malloc(sizeof(char) * 20);
     while(fgets(str, 20, fp) != NULL && !isspace(*str)) {
+        if (*str == 'n') {
+            continue;
+        }
         Node* newNode = malloc(sizeof(Node));
         char* token = strtok(str, " ");
+        for (int i = 1; i < strlen(token); i++) {
+            if (token[0] != 'P' && token[0] != 'H' || isdigit(token[i]) == 0) {
+                printf("Node %d has incorrect name.", nodeNum);
+                exit(1);
+            }
+        }
         strcpy(newNode -> name, token);
 
         token = strtok(NULL, " ");
+        for (int i = 0; i < strlen(token); i++) {
+            if (isdigit(token[i]) == 0) {
+                printf("Node %d has invalid base.", nodeNum);
+                exit(1);
+            }
+        }
         newNode -> base = atoi(token);
 
-        token = strtok(NULL, " ");
+        token = strtok(NULL, " \n");
+        for (int i = 0; i < strlen(token); i++) {
+            if (isdigit(token[i]) == 0) {
+                printf("Node %d has invalid limit.", nodeNum);
+                exit(1);
+            }
+        }
         newNode->limit = atoi(token);
         newNode -> next = 0;
 
@@ -41,6 +63,7 @@ Node* readInput(FILE* fp, Node* head) {
             temp->next = newNode;
             temp = newNode;
         }
+        nodeNum++;
     }
     return head;
 }
@@ -64,9 +87,10 @@ void printMemory (Node* node) {
 
 Node* mergeHoles(Node* head) {
     Node* temp = head;
-    Node* last;
+    Node* last = NULL;
     Node* newHole;
     int newLimit = 0;
+
     while (temp != NULL) {
 
         if (temp->name[0] == 'H') {
@@ -78,7 +102,10 @@ Node* mergeHoles(Node* head) {
             }
             newHole->limit = newLimit;
             newLimit = 0;
-            last->next = newHole;
+
+            if (last != NULL) {
+                last->next = newHole;
+            }
             newHole->next = temp;
         }
         if (temp != NULL) {
@@ -89,30 +116,56 @@ Node* mergeHoles(Node* head) {
     return head;
 }
 
-/*
- * Compaction sort
- *
- * lets assume mergeHole is completed.
- * Therefore - P1 H P17 H
- *
- * make a new linkedlist and only insert if is not H
- *
- * two option - a pointer to all individual holes
- * or a hole struct that contains all hole data
- *
- *
- *
- *
- */
 
+Node* compaction(Node* head) {
+    Node* temp = head;
+    Node* last;
+    Node* nextNode;
+    int holeLimit = 0;
+    int numP = 0;
+    int numPCount = 0;
 
+    while(temp != NULL) {
+        if(temp -> name[0] == 'H') {
+            holeLimit += temp -> limit;
+        } else {
+            numP++;
+        }
+        temp = temp -> next;
+    }
+
+    temp = head;
+    numPCount = numP;
+
+    while(temp != NULL) {
+        if(temp -> name[0] != 'H' && numP == numPCount) {
+            last = temp;
+            head = last;
+            last -> base = 0;
+            numP--;
+        } else if(temp -> name[0] != 'H' && numP > 0) {
+            nextNode = temp;
+            nextNode->base = last->base + last->limit;
+            last->next = nextNode;
+            last = nextNode;
+            numP--;
+        }
+        temp = temp -> next;
+    }
+    Node* hole = malloc(sizeof(Node));
+    hole -> name[0] = 'H';
+    hole -> base = last ->base + last -> limit;
+    hole -> limit = holeLimit;
+    hole -> next = NULL;
+    last -> next = hole;
+
+    return head;
+}
 
 void runProgram(int option) {
     int readStatus = 0;
     FILE *fptr;
     Node *head = NULL;
-    Node *temp;
-    int num = 1;
     while(1) {
         switch(option) {
             case 1:
