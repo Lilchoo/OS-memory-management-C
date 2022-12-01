@@ -83,7 +83,7 @@ Node* mergeHoles(Node* head) {
     while (temp != NULL) {
         if (temp->name[0] == 'H') {
             newHole = temp;
-            while (temp->name[0] == "H") {
+            while (temp->name[0] == 'H') {
                 newLimit += temp->limit;
                 temp = temp->next;
             }
